@@ -9,8 +9,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.android.flags.adapters.CountryAdapter
 import com.android.flags.databinding.FragmentMainBinding
+import com.android.flags.util.ItemOffsetDecoration
 import com.android.flags.util.Status
 import com.bumptech.glide.RequestManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,12 +45,28 @@ class MainFragment @Inject constructor(
         setupRecyclerView()
 
         countryAdapter.setOnItemClickListener { country ->
-            //implement showing second screen
+            glide.load(country.flags?.png).into(binding.ivFlag)
+            binding.tvName.text = country.name?.common
+            binding.tvCapital.text = country.capital?.get(0)
+            binding.tvRegion.text = country.region
+            binding.tvSubregion.text = country.subregion
+            binding.tvPopulation.text = country.population.toString()
+            binding.clDetails.visibility = View.VISIBLE
         }
 
         binding.srlFlags.setOnRefreshListener {
             viewModel?.getCountries()
         }
+
+        binding.clDetails.setOnClickListener {
+            binding.clDetails.visibility = View.GONE
+        }
+
+        greetUser()
+    }
+
+    private fun greetUser() {
+        binding.tvMessage.text = viewModel?.greetUser()
     }
 
     private fun subscribeToObservers() {
@@ -69,12 +87,22 @@ class MainFragment @Inject constructor(
                 }
             }
         })
+
+        viewModel?.message?.observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let { result ->
+                when (result.status) {
+                    Status.SUCCESS -> binding.tvMessage.text = result.data
+                    Status.ERROR -> binding.tvMessage.text = result.message
+                }
+            }
+        })
     }
 
     private fun setupRecyclerView() {
         binding.rvFlags.apply {
             adapter = countryAdapter
-            layoutManager = GridLayoutManager(requireContext(), 3)
+            layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
+            addItemDecoration(ItemOffsetDecoration(5))
         }
     }
 

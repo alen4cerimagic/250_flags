@@ -2,4 +2,35 @@
     <string name="app_name">250 flags</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="unknown_error">An unknown error occurred.</string>
+
+    <string-array name="initial_messages">
+        <item>INITIAL_a day: %1$s hour: %2$s!</item>
+        <item>INITIAL_b day: %1$s hour: %2$s!</item>
+        <item>INITIAL_c day: %1$s hour: %2$s!</item>
+    </string-array>
+
+    <string-array name="level1_messages">
+        <item>LEVEL 1_a counter: %1$s pull to refresh: %2$d!</item>
+        <item>LEVEL 1_b counter: %1$s pull to refresh: %2$d!</item>
+        <item>LEVEL 1_c counter: %1$s pull to refresh: %2$d!</item>
+    </string-array>
+
+    <string-array name="level2_messages">
+        <item>LEVEL 2_a counter: %1$s pull to refresh: %2$d!</item>
+        <item>LEVEL 2_b counter: %1$s pull to refresh: %2$d!</item>
+        <item>LEVEL 2_c counter: %1$s pull to refresh: %2$d!</item>
+    </string-array>
+
+    <string-array name="level3_messages">
+        <item>LEVEL 3_a counter: %1$s pull to refresh: %2$d!</item>
+        <item>LEVEL 3_b counter: %1$s pull to refresh: %2$d!</item>
+        <item>LEVEL 3_c counter: %1$s pull to refresh: %2$d!</item>
+    </string-array>
+
+    <string-array name="level4_messages">
+        <item>LEVEL 4_a counter: %1$s pull to refresh: %2$d!</item>
+        <item>LEVEL 4_b counter: %1$s pull to refresh: %2$d!</item>
+        <item>LEVEL 4_c counter: %1$s pull to refresh: %2$d!</item>
+    </string-array>
 </resources>

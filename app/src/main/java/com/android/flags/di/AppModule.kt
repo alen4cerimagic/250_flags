@@ -3,7 +3,7 @@ package com.android.flags.di
 import android.content.Context
 import com.android.flags.R
 import com.android.flags.data.CountriesAPI
-import com.android.flags.repo.CountriesRepository
+import com.android.flags.repo.MainRepository
 import com.android.flags.repo.DefaultRepository
 import com.android.flags.util.Constants.BASE_URL
 import com.bumptech.glide.Glide
@@ -34,8 +34,9 @@ object AppModule {
     @Singleton
     @Provides
     fun provideDefaultRepository(
-        api: CountriesAPI
-    ) = DefaultRepository(api) as CountriesRepository
+        api: CountriesAPI,
+        @ApplicationContext context: Context
+    ) = DefaultRepository(api, context) as MainRepository
 
     @Singleton
     @Provides
