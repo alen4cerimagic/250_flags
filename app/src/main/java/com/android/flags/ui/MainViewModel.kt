@@ -32,8 +32,8 @@ class MainViewModel @Inject constructor(
 
     private val _countries = MutableLiveData<Event<Resource<List<CountryResponse>>>>()
     val countries: LiveData<Event<Resource<List<CountryResponse>>>> = _countries
-    private val _message = MutableLiveData<Event<Resource<String>>>()
-    val message: LiveData<Event<Resource<String>>> = _message
+    private val _message = MutableLiveData<Event<String>>()
+    val message: LiveData<Event<String>> = _message
 
     init {
         allMessages = repository.getAllMessages()
@@ -73,7 +73,7 @@ class MainViewModel @Inject constructor(
 
     private fun emitMessage() {
         val message = getMessage()
-        _message.value = Event(Resource.success(message))
+        _message.value = Event(message)
     }
 
     private fun getMessage(): String {

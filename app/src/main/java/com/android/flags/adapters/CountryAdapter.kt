@@ -50,9 +50,9 @@ class CountryAdapter @Inject constructor(
 
     override fun onBindViewHolder(holder: CountryViewHolder, position: Int) {
         val url = countries[position].flags?.png
-        holder.itemView.findViewById<ImageView>(R.id.ivFlag).apply {
-            glide.load(url).into(this)
-            setOnItemClickListener {
+        holder.itemView.let {
+            glide.load(url).into(it.findViewById(R.id.ivFlag))
+            it.setOnClickListener {
                 onItemClickListener?.let { click ->
                     click(countries[position])
                 }

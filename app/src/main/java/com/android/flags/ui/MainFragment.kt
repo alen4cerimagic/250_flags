@@ -1,6 +1,7 @@
 package com.android.flags.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.android.flags.adapters.CountryAdapter
+import com.android.flags.data.responses.CountryResponse
 import com.android.flags.databinding.FragmentMainBinding
 import com.android.flags.util.ItemOffsetDecoration
 import com.android.flags.util.Status
@@ -45,24 +47,23 @@ class MainFragment @Inject constructor(
         setupRecyclerView()
 
         countryAdapter.setOnItemClickListener { country ->
-            glide.load(country.flags?.png).into(binding.ivFlag)
-            binding.tvName.text = country.name?.common
-            binding.tvCapital.text = country.capital?.get(0)
-            binding.tvRegion.text = country.region
-            binding.tvSubregion.text = country.subregion
-            binding.tvPopulation.text = country.population.toString()
-            binding.clDetails.visibility = View.VISIBLE
+            binding.countryDetailsView.setData(country)
+            binding.countryDetailsView.visibility = View.VISIBLE
+        }
+
+        binding.countryDetailsView.setOnClickListener {
+            binding.countryDetailsView.visibility = View.GONE
         }
 
         binding.srlFlags.setOnRefreshListener {
             viewModel?.getCountries()
         }
 
-        binding.clDetails.setOnClickListener {
-            binding.clDetails.visibility = View.GONE
-        }
-
         greetUser()
+    }
+
+    private fun showDetails(country: CountryResponse) {
+        binding
     }
 
     private fun greetUser() {
@@ -90,10 +91,7 @@ class MainFragment @Inject constructor(
 
         viewModel?.message?.observe(viewLifecycleOwner, {
             it.getContentIfNotHandled()?.let { result ->
-                when (result.status) {
-                    Status.SUCCESS -> binding.tvMessage.text = result.data
-                    Status.ERROR -> binding.tvMessage.text = result.message
-                }
+                binding.tvMessage.text = result
             }
         })
     }
