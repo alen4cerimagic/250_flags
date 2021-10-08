@@ -4,33 +4,34 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="unknown_error">An unknown error occurred.</string>
 
-    <string-array name="initial_messages">
-        <item>INITIAL_a day: %1$s hour: %2$s!</item>
-        <item>INITIAL_b day: %1$s hour: %2$s!</item>
-        <item>INITIAL_c day: %1$s hour: %2$s!</item>
+    <string-array name="greetings">
+        <item>Good day for a quiz, isnt it? Lets do it.</item>
+        <item>Glad to see you. Want to test your luck today?</item>
+        <item>Can you answer all 100 questions today?</item>
+        <item>Mmm, nothing better than a fresh learning.</item>
+        <item>Such a wonderful day. Are you ready to see some new flags?</item>
+        <item>There is a 250 countries in the world. How much countries you know?</item>
+        <item>Press the button to start the game. Youll loose.</item>
     </string-array>
 
-    <string-array name="level1_messages">
-        <item>LEVEL 1_a counter: %1$s pull to refresh: %2$d!</item>
-        <item>LEVEL 1_b counter: %1$s pull to refresh: %2$d!</item>
-        <item>LEVEL 1_c counter: %1$s pull to refresh: %2$d!</item>
+    <string-array name="questions">
+        <item>Find me %s.</item>
+        <item>Click on %s.</item>
+        <item>This one is easy. Find me %s.</item>
+        <item>We are looking for %s.</item>
+        <item>Just pick %s.</item>
+        <item>You are looking for %s.</item>
     </string-array>
 
-    <string-array name="level2_messages">
-        <item>LEVEL 2_a counter: %1$s pull to refresh: %2$d!</item>
-        <item>LEVEL 2_b counter: %1$s pull to refresh: %2$d!</item>
-        <item>LEVEL 2_c counter: %1$s pull to refresh: %2$d!</item>
+    <string-array name="correct_answer_messages">
+        <item>Great. You found %s. Its %d in a row.</item>
+        <item>Well done. That is a flag of %s. Its %d in a row.</item>
+        <item>Nice. %s indeed. Its %d in a row.</item>
     </string-array>
 
-    <string-array name="level3_messages">
-        <item>LEVEL 3_a counter: %1$s pull to refresh: %2$d!</item>
-        <item>LEVEL 3_b counter: %1$s pull to refresh: %2$d!</item>
-        <item>LEVEL 3_c counter: %1$s pull to refresh: %2$d!</item>
-    </string-array>
-
-    <string-array name="level4_messages">
-        <item>LEVEL 4_a counter: %1$s pull to refresh: %2$d!</item>
-        <item>LEVEL 4_b counter: %1$s pull to refresh: %2$d!</item>
-        <item>LEVEL 4_c counter: %1$s pull to refresh: %2$d!</item>
+    <string-array name="incorrect_answer_messages">
+        <item>Your score is %d. Do you want to play again?</item>
+        <item>%d correct answers. One more round?</item>
+        <item>You have %d correct answers. Can you do better than that?</item>
     </string-array>
 </resources>

@@ -2,9 +2,9 @@ package com.android.flags.di
 
 import android.content.Context
 import com.android.flags.R
-import com.android.flags.data.CountriesAPI
-import com.android.flags.repo.MainRepository
-import com.android.flags.repo.DefaultRepository
+import com.android.flags.remote.CountriesAPI
+import com.android.flags.domain.QuizRepository
+import com.android.flags.domain.QuizRepositoryImpl
 import com.android.flags.util.Constants.BASE_URL
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -33,18 +33,8 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideDefaultRepository(
+    fun provideQuizRepository(
         api: CountriesAPI,
         @ApplicationContext context: Context
-    ) = DefaultRepository(api, context) as MainRepository
-
-    @Singleton
-    @Provides
-    fun provideGlideInstance(
-        @ApplicationContext context: Context
-    ) = Glide.with(context).setDefaultRequestOptions(
-        RequestOptions()
-            .placeholder(R.drawable.ic_image)
-            .placeholder(R.drawable.ic_image)
-    )
+    ) = QuizRepositoryImpl(api, context) as QuizRepository
 }

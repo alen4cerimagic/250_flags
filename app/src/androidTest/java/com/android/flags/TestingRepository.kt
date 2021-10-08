@@ -1,9 +1,10 @@
-package com.android.flags.repo
+package com.android.flags
 
-import com.android.flags.data.responses.CountryResponse
+import com.android.flags.domain.QuizRepository
+import com.android.flags.util.MessageType
 import com.android.flags.util.Resource
 
-class TestingRepository : MainRepository {
+class TestingRepository : QuizRepository {
 
     private var shouldReturnNetworkError = false
 
@@ -16,7 +17,7 @@ class TestingRepository : MainRepository {
             )
     }
 
-    override fun getAllMessages(): HashMap<Int, List<String>> {
+    override fun getAllMessages(): HashMap<MessageType, List<String>> {
         return hashMapOf()
     }
 }

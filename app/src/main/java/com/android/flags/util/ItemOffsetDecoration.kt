@@ -14,11 +14,11 @@ class ItemOffsetDecoration(private val itemOffset: Int) : RecyclerView.ItemDecor
     ) {
         super.getItemOffsets(outRect, view, parent, state)
         val position = parent.getChildAdapterPosition(view)
-        val column = position % 3
+        val column = position % 2
 
-        outRect.left = column * itemOffset / 3
-        outRect.right = itemOffset - (column + 1) * itemOffset / 3
-        if (position >= 3)
+        outRect.left = column * itemOffset / 2
+        outRect.right = itemOffset - (column + 1) * itemOffset / 2
+        if (position >= 2)
             outRect.top = itemOffset
     }
 }

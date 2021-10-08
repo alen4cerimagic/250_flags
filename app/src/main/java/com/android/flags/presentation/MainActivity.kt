@@ -1,20 +1,17 @@
-package com.android.flags
+package com.android.flags.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.android.flags.ui.FragmentFactory
+import com.android.flags.R
+import com.android.flags.util.FragmentFactory
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var fragmentFactory: FragmentFactory
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportFragmentManager.fragmentFactory = fragmentFactory
         setContentView(R.layout.activity_main)
     }
 }
