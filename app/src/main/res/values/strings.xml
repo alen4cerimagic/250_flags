@@ -3,35 +3,10 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="unknown_error">An unknown error occurred.</string>
-
-    <string-array name="greetings">
-        <item>Good day for a quiz, isnt it? Lets do it.</item>
-        <item>Glad to see you. Want to test your luck today?</item>
-        <item>Can you answer all 100 questions today?</item>
-        <item>Mmm, nothing better than a fresh learning.</item>
-        <item>Such a wonderful day. Are you ready to see some new flags?</item>
-        <item>There is a 250 countries in the world. How much countries you know?</item>
-        <item>Press the button to start the game. Youll loose.</item>
-    </string-array>
-
-    <string-array name="questions">
-        <item>Find me %s.</item>
-        <item>Click on %s.</item>
-        <item>This one is easy. Find me %s.</item>
-        <item>We are looking for %s.</item>
-        <item>Just pick %s.</item>
-        <item>You are looking for %s.</item>
-    </string-array>
-
-    <string-array name="correct_answer_messages">
-        <item>Great. You found %s. Its %d in a row.</item>
-        <item>Well done. That is a flag of %s. Its %d in a row.</item>
-        <item>Nice. %s indeed. Its %d in a row.</item>
-    </string-array>
-
-    <string-array name="incorrect_answer_messages">
-        <item>Your score is %d. Do you want to play again?</item>
-        <item>%d correct answers. One more round?</item>
-        <item>You have %d correct answers. Can you do better than that?</item>
-    </string-array>
+    <string name="high_score">High Score:</string>
+    <string name="timer">Timer</string>
+    <string name="question_counter">Question %d/100</string>
+    <string name="welcome">Welcome to the quiz!</string>
+    <string name="quiz_instructions">Give 100 correct answers before your time is up and you win the quiz. The clock starts from 10 seconds. A correct answer adds +3 and incorrect subtracts -2 seconds. Good luck!</string>
+    <string name="get_started">Get Started</string>
 </resources>

@@ -8,11 +8,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.android.flags.R
 import com.android.flags.databinding.FragmentMainBinding
-import com.android.flags.util.ItemOffsetDecoration
 import com.android.flags.util.Status
+import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class QuizFragment : Fragment() {
@@ -44,11 +44,12 @@ class QuizFragment : Fragment() {
         }
 
         binding.btnPlay.setOnClickListener {
-            binding.btnPlay.visibility = View.GONE
+            binding.btnPlay.visibility = View.INVISIBLE
+            binding.tvInstructions.visibility = View.GONE
+            binding.tvWelcome.visibility = View.GONE
+            binding.rvAnswers.visibility = View.VISIBLE
             viewModel.play()
         }
-
-        viewModel.greetUser()
     }
 
     private fun subscribeToObservers() {
@@ -56,54 +57,53 @@ class QuizFragment : Fragment() {
             it.getContentIfNotHandled()?.let { result ->
                 when (result.status) {
                     Status.SUCCESS -> {
-                        binding.progressBar.visibility = View.GONE
-                        countryAdapter.countries = result.data ?: arrayListOf()
+                        val questions = result.data ?: arrayListOf()
+                        countryAdapter.countries = questions
+                        questions.forEach {
+                            if (it.correct == true)
+                                Glide.with(requireContext()).load(it.flag).into(binding.ivMain)
+                        }
                     }
                     Status.LOADING -> {
-                        binding.progressBar.visibility = View.VISIBLE
                     }
-                    Status.ERROR -> {
-                        binding.progressBar.visibility = View.GONE
+                    Status.SERVER_ERROR, Status.INTERNAL_ERROR -> {
                         binding.btnPlay.visibility = View.VISIBLE
-                        Toast.makeText(requireContext(), result.message, Toast.LENGTH_LONG).show()
+                        Toast.makeText(requireContext(), "Error happen", Toast.LENGTH_LONG).show()
                     }
                 }
             }
         })
 
-        viewModel.message.observe(viewLifecycleOwner, {
-            it.getContentIfNotHandled()?.let { result ->
-                when (result.status) {
-                    Status.INITIAL -> {
-                        binding.tvMessage.text = result.data
-                    }
-                    Status.SUCCESS -> {
-                        binding.btnPlay.apply {
-                            visibility = View.VISIBLE
-                            text = "Next question"
-                        }
-                        binding.tvMessage.text = result.data
-                    }
-                    Status.ERROR -> {
-                        binding.btnPlay.apply {
-                            visibility = View.VISIBLE
-                            text = "Start again"
-                        }
-                        binding.tvMessage.text = result.message
-                    }
-                }
+        viewModel.time.observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let {
+                binding.tvTimer.text = it.toString()
             }
         })
 
-        viewModel.answersCount.observe(viewLifecycleOwner, {
+        viewModel.answers.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let {
-                binding.lpiProgress.progress = it
+                binding.progress.progress = it
+                binding.tvProgress.text = String.format(getString(R.string.question_counter), it)
+            }
+        })
+
+        viewModel.result.observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let {
+                binding.btnPlay.visibility = View.VISIBLE
+                binding.tvInstructions.visibility = View.VISIBLE
+                binding.tvWelcome.visibility = View.VISIBLE
+                binding.ivMain.setImageResource(R.drawable.proffesor)
+                binding.rvAnswers.visibility = View.GONE
+                countryAdapter.countries = arrayListOf()
+
+                binding.tvWelcome.text = "Game Over!"
+                binding.tvInstructions.text = "Your score is:${it.first} correct answers and ${it.second} incorrect answers!"
             }
         })
     }
 
     private fun setupRecyclerView() {
-        binding.rvFlags.apply {
+        binding.rvAnswers.apply {
             adapter = countryAdapter
             layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         }

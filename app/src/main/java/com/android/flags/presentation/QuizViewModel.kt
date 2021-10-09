@@ -1,17 +1,17 @@
 package com.android.flags.presentation
 
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.android.flags.domain.CountryModel
 import com.android.flags.domain.QuizRepository
-import com.android.flags.domain.model.CountryModel
-import com.android.flags.domain.model.TextTemplatesModel
 import com.android.flags.util.Event
 import com.android.flags.util.Resource
 import com.android.flags.util.Status
-import com.android.flags.util.TextResource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
+import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -21,76 +21,98 @@ class QuizViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var allCountries: MutableList<CountryModel>? = null
-    private var textResources: TextTemplatesModel = repository.getTextResource()
 
-    private var answersCounter = 0
-    private var answer: CountryModel? = null
+    private var correctAnswerCounter = 0
+    private var incorrectAnswerCounter = 0
+    private var timer = AtomicInteger(10)
+    private var solution: CountryModel? = null
 
     val countries = MutableLiveData<Event<Resource<List<CountryModel>>>>()
-    val message = MutableLiveData<Event<TextResource<String>>>()
-    val answersCount = MutableLiveData<Event<Int>>()
+    val answers = MutableLiveData<Event<Int>>()
+    val time = MutableLiveData<Event<Int>>()
+    val result = MutableLiveData<Event<Pair<Int, Int>>>()
 
+    var job: Job? = null
+    private val tickerFlow = flow {
+        while (true) {
+            delay(1000)
+            emit(Unit)
+        }
+    }.flowOn(Dispatchers.IO).onEach {
+        time.value = Event(timer.decrementAndGet())
+        if (timer.get() <= 0)
+            endGame()
+    }
+
+    private fun createJob() = tickerFlow.launchIn(viewModelScope)
+
+    private fun setJob() {
+        if (job == null || job?.isCompleted == true) {
+            job = null
+            job = createJob()
+        }
+    }
 
     fun play() {
+        setJob()
         allCountries?.let {
             it.shuffle()
-            prepareQuestion(it[Random.nextInt(0, 4)])
-            countries.value = Event(Resource.success(it.take(4)))
+            prepareQuestion(it.take(4))
         } ?: getCountries()
     }
 
+    private fun prepareQuestion(roundList: List<CountryModel>) {
+        val correctAnswerIndex = Random.nextInt(0, 4)
+        for ((index, value) in roundList.withIndex()) {
+            value.correct = correctAnswerIndex == index
+        }
+        solution = roundList[correctAnswerIndex]
+        countries.value = Event(Resource(Status.SUCCESS, roundList))
+    }
+
     private fun getCountries() {
-        countries.value = Event(Resource.loading(null))
+        countries.value = Event(Resource(Status.LOADING, null))
         viewModelScope.launch {
             repository.getAllCountries().let {
                 if (it.status == Status.SUCCESS) {
                     allCountries = it.data?.toMutableList()
                     play()
-                } else
-                    countries.value = Event(Resource.error(it.message, null))
+                }
             }
         }
     }
 
-    private fun prepareQuestion(country: CountryModel) {
-        answer = country
-
-        val question = textResources.questionTemplates.let {
-            String.format(it[Random.nextInt(0, it.size)], country.name)
-        }
-        //_message.value = Event(Resource.initial(message))
-    }
-
     fun answer(country: CountryModel) {
-        when {
-            answer == null -> return //already handled
-            country == answer -> handleCorrectAnswer()
+        when (country) {
+            solution -> handleCorrectAnswer()
             else -> handleIncorrectAnswer()
         }
     }
 
     private fun handleCorrectAnswer() {
-        answersCounter++
-        val message = textResources.correctAnswerTemplates.let {
-            String.format(it[Random.nextInt(0, it.size)], answer?.name, answersCounter)
-        }
-        answer = null
-        //_message.value = Event(Resource.success(message))
+        correctAnswerCounter++
+        answers.value = Event(correctAnswerCounter)
+        updateCounter(3)
+        play()
     }
 
     private fun handleIncorrectAnswer() {
-        val message = textResources.incorrectAnswerTemplates.let {
-            String.format(it[Random.nextInt(0, it.size)], answersCounter)
-        }
-        answersCounter = 0
-        answer = null
-        //_message.value = Event(Resource.error(message, null))
+        incorrectAnswerCounter++
+        updateCounter(-2)
     }
 
-    fun greetUser() {
-        val message = textResources.greetings.let {
-            it[Random.nextInt(0, it.size)]
-        }
-        //_message.value = Event(Resource.initial(message))
+    private fun updateCounter(value: Int) {
+        if (timer.addAndGet(value) <= 0)
+            endGame()
+    }
+
+    private fun endGame() {
+        job?.cancel()
+        time.value = Event(10)
+        answers.value = Event(0)
+        result.value = Event(Pair(correctAnswerCounter, incorrectAnswerCounter))
+        timer.addAndGet(10)
+        correctAnswerCounter = 0
+        incorrectAnswerCounter = 0
     }
 }

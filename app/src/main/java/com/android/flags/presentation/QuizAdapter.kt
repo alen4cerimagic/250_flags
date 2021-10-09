@@ -3,15 +3,13 @@ package com.android.flags.presentation
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.android.flags.R
-import com.android.flags.domain.model.CountryModel
-import com.bumptech.glide.Glide
+import com.android.flags.domain.CountryModel
 
 class QuizAdapter : RecyclerView.Adapter<QuizAdapter.CountryViewHolder>() {
     class CountryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
@@ -41,34 +39,25 @@ class QuizAdapter : RecyclerView.Adapter<QuizAdapter.CountryViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CountryViewHolder {
         return CountryViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.flag_item, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.quiz_item, parent, false)
         )
     }
 
     override fun onBindViewHolder(holder: CountryViewHolder, position: Int) {
         val country = countries[position]
 
-        val ivMainFlag = holder.itemView.findViewById<ImageView>(R.id.ivFlagMain)
-        val llDetailsHolder = holder.itemView.findViewById<LinearLayout>(R.id.llDetailsHolder)
-        val ivSmallFlag = holder.itemView.findViewById<ImageView>(R.id.ivFlagSmall)
-        val tvName = holder.itemView.findViewById<TextView>(R.id.tvName)
-        val tvCapital = holder.itemView.findViewById<TextView>(R.id.tvCapital)
-        val tvRegion = holder.itemView.findViewById<TextView>(R.id.tvRegion)
-
-        ivMainFlag.visibility = View.VISIBLE
-        llDetailsHolder.visibility = View.GONE
-
-        Glide.with(holder.itemView.context).load(country.flag).into(ivSmallFlag)
-        Glide.with(holder.itemView.context).load(country.flag).into(ivMainFlag)
-        tvName.text = country.name
-        tvCapital.text = country.capital
-        tvRegion.text = country.region
+        (holder.itemView as AppCompatButton).apply {
+            background =
+                ContextCompat.getDrawable(holder.itemView.context, R.drawable.answer_background)
+            text = country.name
+        }
 
         holder.itemView.setOnClickListener {
+            it.background = if (country.correct == true)
+                ContextCompat.getDrawable(it.context, R.drawable.correct_answer_background)
+            else
+                ContextCompat.getDrawable(it.context, R.drawable.incorrect_answer_background)
             onItemClickListener?.let { click ->
-                ivMainFlag.visibility = View.GONE
-                llDetailsHolder.visibility = View.VISIBLE
-
                 click(country)
             }
         }
