@@ -6,7 +6,7 @@
     android:textAllCaps="true"
     android:background="@drawable/answer_background"
     android:fontFamily="@font/poppins"
-    android:text="Bosnia"
+    android:text=""
     android:maxLines="1"
     android:ellipsize="end"
     android:paddingStart="8dp"

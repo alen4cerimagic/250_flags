@@ -1,12 +1,13 @@
 <resources>
     <string name="app_name">250 flags</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="unknown_error">An unknown error occurred.</string>
+    <string name="error_title">An error occurred.</string>
+    <string name="error_message">Please try again by clicking PLAY button.</string>
     <string name="high_score">High Score:</string>
-    <string name="timer">Timer</string>
-    <string name="question_counter">Question %d/100</string>
+    <string name="question_counter">Question %d/50</string>
+    <string name="question_counter_initial">Question 0/50</string>
     <string name="welcome">Welcome to the quiz!</string>
-    <string name="quiz_instructions">Give 100 correct answers before your time is up and you win the quiz. The clock starts from 10 seconds. A correct answer adds +3 and incorrect subtracts -2 seconds. Good luck!</string>
-    <string name="get_started">Get Started</string>
+    <string name="quiz_instructions">Answer correctly on 50 questions before your time is up and WIN!!!\n\nRULES:\nCOUNTDOWN starts from 10 sec\nCORRECT answer +1 sec\nINCORRECT answer -1 sec</string>
+    <string name="play">Play</string>
+    <string name="game_over">Game Over</string>
+    <string name="your_result">YOUR SCORE\n\ncorrect:  %1$d\nincorrect:  %2$d</string>
 </resources>

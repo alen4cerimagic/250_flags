@@ -19,7 +19,7 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="33dp"
+        android:layout_height="40dp"
         android:orientation="horizontal"
         android:layout_marginEnd="16dp"
         android:background="@drawable/btn_background"
@@ -29,8 +29,8 @@
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="15dp"
-            android:layout_height="22dp"
+            android:layout_width="18dp"
+            android:layout_height="25dp"
             android:layout_marginStart="8dp"
             android:layout_gravity="center_vertical"
             app:srcCompat="@drawable/medal" />
@@ -43,8 +43,8 @@
             android:layout_marginStart="8dp"
             android:fontFamily="@font/poppins_semibold"
             android:text="@string/high_score"
-            android:textColor="#ffffff"
-            android:textSize="12sp" />
+            android:textColor="@color/white"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/tvHighScore"
@@ -54,9 +54,9 @@
             android:layout_marginStart="4dp"
             android:layout_marginEnd="8dp"
             android:fontFamily="@font/poppins_bold"
-            android:text="73"
-            android:textColor="#ffffff"
-            android:textSize="12sp"
+            android:text="0"
+            android:textColor="@color/white"
+            android:textSize="14sp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -66,12 +66,27 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:fontFamily="@font/poppins_semibold"
-        android:text="@string/timer"
-        android:textColor="#ffffff"
-        android:textSize="16sp"
+        android:text="10"
+        android:textColor="@color/white"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/view"
         app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvExtraTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:fontFamily="@font/poppins_semibold"
+        android:text="1"
+        android:alpha="0"
+        android:textColor="@color/green"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        app:layout_constraintStart_toEndOf="@id/tvTimer"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -80,7 +95,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:fontFamily="@font/poppins_bold"
-        android:textColor="#ffffff"
+        android:textColor="@color/white"
+        android:text="@string/question_counter_initial"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
@@ -91,7 +107,7 @@
         android:layout_width="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:max="100"
+        android:max="50"
         android:progressTint="@color/gold"
         android:progressBackgroundTint="@color/white"
         android:layout_height="wrap_content"
@@ -123,10 +139,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/proffesor" />
+            app:srcCompat="@drawable/professor" />
 
         <TextView
-            android:id="@+id/tvWelcome"
+            android:id="@+id/tvTitle"
             android:layout_width="match_parent"
             android:textAlignment="center"
             android:layout_marginStart="16dp"
@@ -142,7 +158,7 @@
             app:layout_constraintTop_toBottomOf="@+id/ivMain" />
 
         <TextView
-            android:id="@+id/tvInstructions"
+            android:id="@+id/tvMessage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -156,7 +172,7 @@
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvWelcome" />
+            app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnPlay"
@@ -167,13 +183,24 @@
             android:background="@drawable/btn_background"
             android:elevation="0dp"
             android:fontFamily="@font/poppins_bold"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:text="@string/get_started"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:text="@string/play"
             android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="16dp"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvAnswers"

@@ -20,11 +20,7 @@ class QuizAdapter : RecyclerView.Adapter<QuizAdapter.CountryViewHolder>() {
 
     private val differ = AsyncListDiffer(this, object : DiffUtil.ItemCallback<CountryModel>() {
         override fun areItemsTheSame(oldItem: CountryModel, newItem: CountryModel) = false
-
-        override fun areContentsTheSame(
-            oldItem: CountryModel,
-            newItem: CountryModel
-        ) = false
+        override fun areContentsTheSame(oldItem: CountryModel, newItem: CountryModel) = false
     })
 
     private var onItemClickListener: ((CountryModel) -> Unit)? = null
