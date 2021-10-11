@@ -1,26 +1,30 @@
 package com.android.flags.presentation
 
-import android.content.SharedPreferences
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.flags.domain.CountryModel
 import com.android.flags.domain.QuizRepository
-import com.android.flags.util.Constants
+import com.android.flags.util.Constants.ANSWERS_TO_WIN_COUNT
 import com.android.flags.util.Event
 import com.android.flags.util.Resource
 import com.android.flags.util.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 import kotlin.random.Random
 
 @HiltViewModel
 class QuizViewModel @Inject constructor(
-    private val repository: QuizRepository,
-    private val sharedPreferences: SharedPreferences
+    private val repository: QuizRepository
 ) : ViewModel() {
 
     private var allCountries: MutableList<CountryModel>? = null
@@ -40,14 +44,12 @@ class QuizViewModel @Inject constructor(
         tick()
     }
 
-    var currentHighScore = sharedPreferences.getInt(Constants.PREF_HIGH_SCORE, 0)
-
     val questions = MutableLiveData<Event<Resource<List<CountryModel>>>>()
     val correctAnswersCount = MutableLiveData<Event<Int>>()
     val time = MutableLiveData<Event<Int>>()
     val extraTime = MutableLiveData<Event<Int>>()
     val result = MutableLiveData<Event<Pair<Int, Int>>>()
-    val highScore = MutableLiveData<Event<Int>>()
+    val gameWon = MutableLiveData<Event<Pair<Int, Int>>>()
 
     fun play() {
         allCountries?.let {
@@ -101,6 +103,10 @@ class QuizViewModel @Inject constructor(
 
     private fun handleCorrectAnswer() {
         correctAnswerCounter++
+        if (correctAnswerCounter == ANSWERS_TO_WIN_COUNT) {
+            winGame()
+            return
+        }
         updateCounter(1)
         play()
         correctAnswersCount.value = Event(correctAnswerCounter)
@@ -117,19 +123,35 @@ class QuizViewModel @Inject constructor(
             endGame()
     }
 
+    private fun winGame() {
+        finishTimerJob()
+        resetUI()
+
+        gameWon.value = Event(Pair(correctAnswerCounter, incorrectAnswerCounter))
+
+        resetValues()
+    }
+
     private fun endGame() {
-        timerJob?.cancel()
-        timerJob = null
+        finishTimerJob()
+        resetUI()
 
-        if (currentHighScore < correctAnswerCounter) {
-            sharedPreferences.edit().putInt(Constants.PREF_HIGH_SCORE, correctAnswerCounter).apply()
-
-            highScore.value = Event(correctAnswerCounter)
-        }
-        time.value = Event(10)
-        correctAnswersCount.value = Event(0)
         result.value = Event(Pair(correctAnswerCounter, incorrectAnswerCounter))
 
+        resetValues()
+    }
+
+    private fun finishTimerJob() {
+        timerJob?.cancel()
+        timerJob = null
+    }
+
+    private fun resetUI() {
+        time.value = Event(10)
+        correctAnswersCount.value = Event(0)
+    }
+
+    private fun resetValues() {
         timer.addAndGet(10)
         correctAnswerCounter = 0
         incorrectAnswerCounter = 0

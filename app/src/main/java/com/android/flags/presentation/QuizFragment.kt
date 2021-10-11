@@ -1,5 +1,7 @@
 package com.android.flags.presentation
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +13,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.android.flags.R
 import com.android.flags.databinding.FragmentMainBinding
 import com.android.flags.domain.CountryModel
+import com.android.flags.util.Constants
 import com.android.flags.util.Status
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,7 +25,9 @@ class QuizFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var viewModel: QuizViewModel
+    private lateinit var sharedPreferences: SharedPreferences
     private val countryAdapter = QuizAdapter()
+    private var highScore = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,13 +40,15 @@ class QuizFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sharedPreferences =
+            requireActivity().getSharedPreferences(Constants.PREFERENCE_NAME, Context.MODE_PRIVATE)
         viewModel = ViewModelProvider(requireActivity()).get(QuizViewModel::class.java)
 
         subscribeToObservers()
         setupRecyclerView()
         setClickListeners()
 
-        binding.tvHighScore.text = viewModel.currentHighScore.toString()
+        setHighScore()
     }
 
     private fun setupRecyclerView() = binding.rvAnswers.apply {
@@ -58,6 +65,11 @@ class QuizFragment : Fragment() {
             binding.btnPlay.visibility = View.INVISIBLE
             viewModel.play()
         }
+    }
+
+    private fun setHighScore() {
+        highScore = sharedPreferences.getInt(Constants.PREF_HIGH_SCORE, 0)
+        binding.tvHighScore.text = highScore.toString()
     }
 
     private fun subscribeToObservers() {
@@ -98,15 +110,15 @@ class QuizFragment : Fragment() {
             }
         })
 
-        viewModel.highScore.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let {
-                setHighScore(it)
+        viewModel.result.observe(viewLifecycleOwner, {
+            it.getContentIfNotHandled()?.let {
+                gameLost(it)
             }
         })
 
-        viewModel.result.observe(viewLifecycleOwner, {
-            it.getContentIfNotHandled()?.let {
-                endGame(it)
+        viewModel.gameWon.observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let {
+                gameWon(it)
             }
         })
     }
@@ -158,7 +170,6 @@ class QuizFragment : Fragment() {
     }
 
     private fun endGame(value: Pair<Int, Int>) = binding.apply {
-        tvTitle.text = getString(R.string.game_over)
         tvMessage.text = getString(R.string.your_result, value.first, value.second)
 
         btnPlay.visibility = View.VISIBLE
@@ -166,10 +177,23 @@ class QuizFragment : Fragment() {
         tvTitle.visibility = View.VISIBLE
         ivMain.setImageResource(R.drawable.professor)
         countryAdapter.countries = arrayListOf()
+
+        if (value.first > highScore) {
+            binding.tvHighScore.text = value.first.toString()
+            sharedPreferences.edit().putInt(Constants.PREF_HIGH_SCORE, value.first).apply()
+        }
     }
 
-    private fun setHighScore(value: Int) = binding.apply {
-        tvHighScore.text = value.toString()
+    private fun gameWon(value: Pair<Int, Int>) = binding.apply {
+        tvTitle.text = getString(R.string.game_won)
+
+        endGame(value)
+    }
+
+    private fun gameLost(value: Pair<Int, Int>) = binding.apply {
+        tvTitle.text = getString(R.string.game_over)
+
+        endGame(value)
     }
 
     override fun onDestroyView() {

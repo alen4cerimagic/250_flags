@@ -9,5 +9,6 @@
     <string name="quiz_instructions">Answer correctly on 50 questions before your time is up and WIN!!!\n\nRULES:\nCOUNTDOWN starts from 10 sec\nCORRECT answer +1 sec\nINCORRECT answer -1 sec</string>
     <string name="play">Play</string>
     <string name="game_over">Game Over</string>
+    <string name="game_won">Congratulations!!!</string>
     <string name="your_result">YOUR SCORE\n\ncorrect:  %1$d\nincorrect:  %2$d</string>
 </resources>

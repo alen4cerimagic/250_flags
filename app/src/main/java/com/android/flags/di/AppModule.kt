@@ -35,10 +35,4 @@ object AppModule {
     fun provideQuizRepository(
         api: CountriesAPI
     ) = QuizRepositoryImpl(api) as QuizRepository
-
-    @Singleton
-    @Provides
-    fun provideSharedPreference(@ApplicationContext context: Context): SharedPreferences {
-        return context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE)
-    }
 }
