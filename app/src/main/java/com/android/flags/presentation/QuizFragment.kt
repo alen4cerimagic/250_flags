@@ -17,6 +17,9 @@ import com.android.flags.util.Constants
 import com.android.flags.util.Status
 import com.android.flags.util.TrackingEvents.ANSWER_QUESTION
 import com.android.flags.util.TrackingEvents.CHANGE_HIGH_SCORE
+import com.android.flags.util.TrackingEvents.CORRECT_ANSWERS
+import com.android.flags.util.TrackingEvents.HGH_SCORE
+import com.android.flags.util.TrackingEvents.INCORRECT_ANSWERS
 import com.android.flags.util.TrackingEvents.LOSE_GAME
 import com.android.flags.util.TrackingEvents.START_GAME
 import com.android.flags.util.TrackingEvents.WIN_GAME
@@ -192,14 +195,14 @@ class QuizFragment : Fragment() {
         countryAdapter.countries = arrayListOf()
 
         if (value.first > highScore) {
-            logEvent(CHANGE_HIGH_SCORE, Bundle().apply { putInt("high_score", value.first) })
+            logEvent(CHANGE_HIGH_SCORE, Bundle().apply { putInt(HGH_SCORE, value.first) })
             binding.tvHighScore.text = value.first.toString()
             sharedPreferences.edit().putInt(Constants.PREF_HIGH_SCORE, value.first).apply()
         }
     }
 
     private fun gameWon(value: Pair<Int, Int>) = binding.apply {
-        logEvent(WIN_GAME, Bundle().apply { putInt("incorrect_answers", value.second) })
+        logEvent(WIN_GAME, Bundle().apply { putInt(INCORRECT_ANSWERS, value.second) })
 
         tvTitle.text = getString(R.string.game_won)
         endGame(value)
@@ -207,8 +210,8 @@ class QuizFragment : Fragment() {
 
     private fun gameLost(value: Pair<Int, Int>) = binding.apply {
         logEvent(LOSE_GAME, Bundle().apply {
-            putInt("correct_answers", value.first)
-            putInt("incorrect_answers", value.second)
+            putInt(CORRECT_ANSWERS, value.first)
+            putInt(INCORRECT_ANSWERS, value.second)
         })
 
         tvTitle.text = getString(R.string.game_over)
