@@ -6,7 +6,6 @@ import com.android.flags.TestQuizRepository
 import com.android.flags.domain.CountryModel
 import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.apache.tools.ant.taskdefs.Sleep
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

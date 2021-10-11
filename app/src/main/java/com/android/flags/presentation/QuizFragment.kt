@@ -15,7 +15,15 @@ import com.android.flags.databinding.FragmentMainBinding
 import com.android.flags.domain.CountryModel
 import com.android.flags.util.Constants
 import com.android.flags.util.Status
+import com.android.flags.util.TrackingEvents.ANSWER_QUESTION
+import com.android.flags.util.TrackingEvents.CHANGE_HIGH_SCORE
+import com.android.flags.util.TrackingEvents.LOSE_GAME
+import com.android.flags.util.TrackingEvents.START_GAME
+import com.android.flags.util.TrackingEvents.WIN_GAME
 import com.bumptech.glide.Glide
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,6 +31,8 @@ class QuizFragment : Fragment() {
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     private lateinit var viewModel: QuizViewModel
     private lateinit var sharedPreferences: SharedPreferences
@@ -40,6 +50,7 @@ class QuizFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        firebaseAnalytics = Firebase.analytics
         sharedPreferences =
             requireActivity().getSharedPreferences(Constants.PREFERENCE_NAME, Context.MODE_PRIVATE)
         viewModel = ViewModelProvider(requireActivity()).get(QuizViewModel::class.java)
@@ -48,7 +59,7 @@ class QuizFragment : Fragment() {
         setupRecyclerView()
         setClickListeners()
 
-        setHighScore()
+        setInitialHighScore()
     }
 
     private fun setupRecyclerView() = binding.rvAnswers.apply {
@@ -58,16 +69,18 @@ class QuizFragment : Fragment() {
 
     private fun setClickListeners() {
         countryAdapter.setOnItemClickListener { country ->
+            logEvent(ANSWER_QUESTION, null)
             viewModel.answer(country)
         }
 
         binding.btnPlay.setOnClickListener {
+            logEvent(START_GAME, null)
             binding.btnPlay.visibility = View.INVISIBLE
             viewModel.play()
         }
     }
 
-    private fun setHighScore() {
+    private fun setInitialHighScore() {
         highScore = sharedPreferences.getInt(Constants.PREF_HIGH_SCORE, 0)
         binding.tvHighScore.text = highScore.toString()
     }
@@ -179,21 +192,31 @@ class QuizFragment : Fragment() {
         countryAdapter.countries = arrayListOf()
 
         if (value.first > highScore) {
+            logEvent(CHANGE_HIGH_SCORE, Bundle().apply { putInt("high_score", value.first) })
             binding.tvHighScore.text = value.first.toString()
             sharedPreferences.edit().putInt(Constants.PREF_HIGH_SCORE, value.first).apply()
         }
     }
 
     private fun gameWon(value: Pair<Int, Int>) = binding.apply {
-        tvTitle.text = getString(R.string.game_won)
+        logEvent(WIN_GAME, Bundle().apply { putInt("incorrect_answers", value.second) })
 
+        tvTitle.text = getString(R.string.game_won)
         endGame(value)
     }
 
     private fun gameLost(value: Pair<Int, Int>) = binding.apply {
-        tvTitle.text = getString(R.string.game_over)
+        logEvent(LOSE_GAME, Bundle().apply {
+            putInt("correct_answers", value.first)
+            putInt("incorrect_answers", value.second)
+        })
 
+        tvTitle.text = getString(R.string.game_over)
         endGame(value)
+    }
+
+    private fun logEvent(event: String, data: Bundle?) {
+        firebaseAnalytics.logEvent(event, data)
     }
 
     override fun onDestroyView() {

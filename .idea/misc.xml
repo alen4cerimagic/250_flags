@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.3648148148148148" />
         <entry key="app/src/main/res/drawable/answer_background.xml" value="0.3675925925925926" />
         <entry key="app/src/main/res/drawable/btn_background.xml" value="0.3675925925925926" />
         <entry key="app/src/main/res/drawable/correct_answer_background.xml" value="0.3675925925925926" />
@@ -11,6 +12,7 @@
         <entry key="app/src/main/res/drawable/game_layer1.xml" value="0.3675925925925926" />
         <entry key="app/src/main/res/drawable/game_layer2.xml" value="0.3675925925925926" />
         <entry key="app/src/main/res/drawable/ic_image.xml" value="0.3675925925925926" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.3648148148148148" />
         <entry key="app/src/main/res/drawable/incorrect_answer_background.xml" value="0.3675925925925926" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/flag_item.xml" value="0.37604166666666666" />
