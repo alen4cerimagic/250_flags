@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "22490198856",
+    "project_id": "flags-f291a",
+    "storage_bucket": "flags-f291a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:22490198856:android:1f7d1899c20b7a7f83b97d",
+        "android_client_info": {
+          "package_name": "com.android.flags"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "22490198856-dsrmt645481v4qdgl5efkd319ssrbf1t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANdNYbirIsHsDrIFlHYU_5zilGiFLlrpg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "22490198856-dsrmt645481v4qdgl5efkd319ssrbf1t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
